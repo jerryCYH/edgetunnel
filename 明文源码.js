@@ -1,4 +1,3 @@
-
 import { connect } from 'cloudflare:sockets';
 
 let userID = '';
@@ -566,7 +565,7 @@ function process维列斯Header(维列斯Buffer, userID) {
 	if (!isValidUser) {
 		return {
 			hasError: true,
-			message: `invalid user ${(new Uint8Array(维列斯Buffer.slice(1, 17)))}`,
+			message: `invalid user ${(new Uint8Array(维列斯Buffer.slice(1, 17))}`,
 		};
 	}
 
@@ -1519,101 +1518,253 @@ async function 生成配置信息(userID, hostName, sub, UA, RproxyIP, _url, fak
 		else 订阅器 += `<br>SUBAPI（订阅转换后端）: ${subProtocol}://${subConverter}<br>SUBCONFIG（订阅转换配置文件）: ${subConfig}`;
 		const 动态UUID信息 = (uuid != userID) ? `TOKEN: ${uuid}<br>UUIDNow: ${userID}<br>UUIDLow: ${userIDLow}<br>${userIDTime}TIME（动态UUID有效时间）: ${有效时间} 天<br>UPTIME（动态UUID更新时间）: ${更新时间} 时（北京时间）<br><br>` : `${userIDTime}`;
 		const 节点配置页 = `
-			################################################################<br>
-			Subscribe / sub 订阅地址, 点击链接自动 <strong>复制订阅链接</strong> 并 <strong>生成订阅二维码</strong> <br>
-			---------------------------------------------------------------<br>
-			自适应订阅地址:<br>
-			<a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sub','qrcode_0')" style="color:blue;text-decoration:underline;cursor:pointer;">https://${proxyhost}${hostName}/${uuid}</a><br>
-			<div id="qrcode_0" style="margin: 10px 10px 10px 10px;"></div>
-			Base64订阅地址:<br>
-			<a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?b64','qrcode_1')" style="color:blue;text-decoration:underline;cursor:pointer;">https://${proxyhost}${hostName}/${uuid}?b64</a><br>
-			<div id="qrcode_1" style="margin: 10px 10px 10px 10px;"></div>
-			clash订阅地址:<br>
-			<a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?clash','qrcode_2')" style="color:blue;text-decoration:underline;cursor:pointer;">https://${proxyhost}${hostName}/${uuid}?clash</a><br>
-			<div id="qrcode_2" style="margin: 10px 10px 10px 10px;"></div>
-			singbox订阅地址:<br>
-			<a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sb','qrcode_3')" style="color:blue;text-decoration:underline;cursor:pointer;">https://${proxyhost}${hostName}/${uuid}?sb</a><br>
-			<div id="qrcode_3" style="margin: 10px 10px 10px 10px;"></div>
-			loon订阅地址:<br>
-			<a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?loon','qrcode_5')" style="color:blue;text-decoration:underline;cursor:pointer;">https://${proxyhost}${hostName}/${uuid}?loon</a><br>
-			<div id="qrcode_5" style="margin: 10px 10px 10px 10px;"></div>
-			<strong><a href="javascript:void(0);" id="noticeToggle" onclick="toggleNotice()">实用订阅技巧∨</a></strong><br>
-				<div id="noticeContent" class="notice-content" style="display: none;">
-					<strong>1.</strong> 如您使用的是 PassWall、PassWall2 路由插件，订阅编辑的 <strong>用户代理(User-Agent)</strong> 设置为 <strong>PassWall</strong> 即可；<br>
-					<br>
-					<strong>2.</strong> 如您使用的是 SSR+ 路由插件，推荐使用 <strong>Base64订阅地址</strong> 进行订阅；<br>
-					<br>
-					<strong>3.</strong> 快速切换 <a href='${atob('aHR0cHM6Ly9naXRodWIuY29tL2NtbGl1L1dvcmtlclZsZXNzMnN1Yg==')}'>优选订阅生成器</a> 至：sub.google.com，您可将"?sub=sub.google.com"参数添加到链接末尾，例如：<br>
-					&nbsp;&nbsp;https://${proxyhost}${hostName}/${uuid}<strong>?sub=sub.google.com</strong><br>
-					<br>
-					<strong>4.</strong> 快速更换 PROXYIP 至：proxyip.cmliussss.net:443，您可将"?proxyip=proxyip.cmliussss.net:443"参数添加到链接末尾，例如：<br>
-					&nbsp;&nbsp; https://${proxyhost}${hostName}/${uuid}<strong>?proxyip=proxyip.cmliussss.net:443</strong><br>
-					<br>
-					<strong>5.</strong> 快速更换 SOCKS5 至：user:password@127.0.0.1:1080，您可将"?socks5=user:password@127.0.0.1:1080"参数添加到链接末尾，例如：<br>
-					&nbsp;&nbsp;https://${proxyhost}${hostName}/${uuid}<strong>?socks5=user:password@127.0.0.1:1080</strong><br>
-					<br>
-					<strong>6.</strong> 如需指定多个参数则需要使用'&'做间隔，例如：<br>
-					&nbsp;&nbsp;https://${proxyhost}${hostName}/${uuid}?sub=sub.google.com<strong>&</strong>proxyip=proxyip.cmliussss.net<br>
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<title>${FileName} 配置</title>
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1">
+				<style>
+					/* 新增美化样式 */
+					* {
+						margin: 0;
+						padding: 0;
+						box-sizing: border-box;
+						font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+					}
+					
+					body {
+						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+						color: #fff;
+						min-height: 100vh;
+						padding: 20px;
+						line-height: 1.6;
+					}
+					
+					.container {
+						max-width: 1200px;
+						margin: 0 auto;
+					}
+					
+					.header {
+						text-align: center;
+						padding: 20px 0;
+						margin-bottom: 30px;
+					}
+					
+					.header h1 {
+						font-size: 2.5rem;
+						margin-bottom: 10px;
+						text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+					}
+					
+					.card {
+						background: rgba(255, 255, 255, 0.1);
+						backdrop-filter: blur(10px);
+						border-radius: 15px;
+						padding: 25px;
+						margin-bottom: 25px;
+						box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+						border: 1px solid rgba(255, 255, 255, 0.18);
+					}
+					
+					.section-title {
+						font-size: 1.8rem;
+						margin-bottom: 20px;
+						color: #fff;
+						border-bottom: 2px solid rgba(255,255,255,0.3);
+						padding-bottom: 10px;
+					}
+					
+					.config-item {
+						margin-bottom: 15px;
+						padding: 15px;
+						background: rgba(255, 255, 255, 0.05);
+						border-radius: 10px;
+					}
+					
+					.btn {
+						display: inline-block;
+						padding: 12px 25px;
+						background: rgba(255, 255, 255, 0.15);
+						border: 1px solid rgba(255, 255, 255, 0.3);
+						border-radius: 50px;
+						color: white;
+						text-decoration: none;
+						font-weight: 500;
+						margin: 8px 5px;
+						cursor: pointer;
+						transition: all 0.3s ease;
+						backdrop-filter: blur(5px);
+					}
+					
+					.btn:hover {
+						background: rgba(255, 255, 255, 0.25);
+						transform: translateY(-2px);
+						box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+					}
+					
+					.qrcode-container {
+						display: flex;
+						justify-content: center;
+						margin: 15px 0;
+					}
+					
+					.footer {
+						text-align: center;
+						margin-top: 30px;
+						padding: 20px;
+						font-size: 0.9rem;
+						opacity: 0.8;
+					}
+					
+					.notice-content {
+						background: rgba(0, 0, 0, 0.2);
+						padding: 15px;
+						border-radius: 10px;
+						margin: 15px 0;
+					}
+					
+					.copy-btn {
+						background: rgba(86, 171, 255, 0.3);
+					}
+					
+					.copy-btn:hover {
+						background: rgba(86, 171, 255, 0.5);
+					}
+					
+					@media (max-width: 768px) {
+						.container {
+							padding: 10px;
+						}
+						.card {
+							padding: 15px;
+						}
+						.section-title {
+							font-size: 1.5rem;
+						}
+					}
+				</style>
+			</head>
+			<body>
+				<div class="container">
+					<div class="header">
+						<h1>${FileName} 配置中心</h1>
+					</div>
+					
+					<div class="card">
+						<h2 class="section-title">订阅地址</h2>
+						<div class="config-item">
+							<a class="btn copy-btn" href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sub','qrcode_0')">自适应订阅</a>
+							<div id="qrcode_0" class="qrcode-container"></div>
+						</div>
+						
+						<div class="config-item">
+							<a class="btn copy-btn" href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?b64','qrcode_1')">Base64订阅</a>
+							<div id="qrcode_1" class="qrcode-container"></div>
+						</div>
+						
+						<div class="config-item">
+							<a class="btn copy-btn" href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?clash','qrcode_2')">Clash订阅</a>
+							<div id="qrcode_2" class="qrcode-container"></div>
+						</div>
+						
+						<div class="config-item">
+							<a class="btn copy-btn" href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sb','qrcode_3')">SingBox订阅</a>
+							<div id="qrcode_3" class="qrcode-container"></div>
+						</div>
+						
+						<div class="config-item">
+							<a class="btn copy-btn" href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?loon','qrcode_5')">Loon订阅</a>
+							<div id="qrcode_5" class="qrcode-container"></div>
+						</div>
+						
+						<div class="config-item">
+							<strong><a class="btn" href="javascript:void(0);" id="noticeToggle" onclick="toggleNotice()">实用订阅技巧 ∨</a></strong>
+							<div id="noticeContent" class="notice-content" style="display: none;">
+								<strong>1.</strong> 如您使用的是 PassWall、PassWall2 路由插件，订阅编辑的 <strong>用户代理(User-Agent)</strong> 设置为 <strong>PassWall</strong> 即可；<br><br>
+								<strong>2.</strong> 如您使用的是 SSR+ 路由插件，推荐使用 <strong>Base64订阅地址</strong> 进行订阅；<br><br>
+								<strong>3.</strong> 快速切换 <a href='${atob('aHR0cHM6Ly9naXRodWIuY29tL2NtbGl1L1dvcmtlclZsZXNzMnN1Yg==')}'>优选订阅生成器</a> 至：sub.google.com，您可将"?sub=sub.google.com"参数添加到链接末尾，例如：<br>
+								&nbsp;&nbsp;https://${proxyhost}${hostName}/${uuid}<strong>?sub=sub.google.com</strong><br><br>
+								<strong>4.</strong> 快速更换 PROXYIP 至：proxyip.cmliussss.net:443，您可将"?proxyip=proxyip.cmliussss.net:443"参数添加到链接末尾，例如：<br>
+								&nbsp;&nbsp; https://${proxyhost}${hostName}/${uuid}<strong>?proxyip=proxyip.cmliussss.net:443</strong><br><br>
+								<strong>5.</strong> 快速更换 SOCKS5 至：user:password@127.0.0.1:1080，您可将"?socks5=user:password@127.0.0.1:1080"参数添加到链接末尾，例如：<br>
+								&nbsp;&nbsp;https://${proxyhost}${hostName}/${uuid}<strong>?socks5=user:password@127.0.0.1:1080</strong><br><br>
+								<strong>6.</strong> 如需指定多个参数则需要使用'&'做间隔，例如：<br>
+								&nbsp;&nbsp;https://${proxyhost}${hostName}/${uuid}?sub=sub.google.com<strong>&</strong>proxyip=proxyip.cmliussss.net<br>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card">
+						<h2 class="section-title">配置信息</h2>
+						<div class="config-item">
+							${动态UUID信息}
+							HOST: ${hostName}<br>
+							UUID: ${userID}<br>
+							FKID: ${fakeUserID}<br>
+							UA: ${UA}<br>
+							SCV（跳过TLS证书验证）: ${SCV}<br>
+							${订阅器}
+						</div>
+					</div>
+					
+					<div class="card">
+						<h2 class="section-title">v2ray 配置</h2>
+						<div class="config-item">
+							<a class="btn copy-btn" href="javascript:void(0)" onclick="copyToClipboard('${v2ray}','qrcode_v2ray')">复制 v2ray 链接</a>
+							<div id="qrcode_v2ray" class="qrcode-container"></div>
+						</div>
+					</div>
+					
+					<div class="card">
+						<h2 class="section-title">Clash-Meta 配置</h2>
+						<div class="config-item">
+							${clash}
+						</div>
+					</div>
+					
+					<div class="footer">
+						${cmad}
+					</div>
 				</div>
-			<script src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
-			<script>
-			function copyToClipboard(text, qrcode) {
-				navigator.clipboard.writeText(text).then(() => {
-					alert('已复制到剪贴板');
-				}).catch(err => {
-					console.error('复制失败:', err);
-				});
-				const qrcodeDiv = document.getElementById(qrcode);
-				qrcodeDiv.innerHTML = '';
-				new QRCode(qrcodeDiv, {
-					text: text,
-					width: 220, // 调整宽度
-					height: 220, // 调整高度
-					colorDark: "#000000", // 二维码颜色
-					colorLight: "#ffffff", // 背景颜色
-					correctLevel: QRCode.CorrectLevel.Q, // 设置纠错级别
-					scale: 1 // 调整像素颗粒度
-				});
-			}
-
-			function toggleNotice() {
-				const noticeContent = document.getElementById('noticeContent');
-				const noticeToggle = document.getElementById('noticeToggle');
-				if (noticeContent.style.display === 'none') {
-					noticeContent.style.display = 'block';
-					noticeToggle.textContent = '实用订阅技巧∧';
-				} else {
-					noticeContent.style.display = 'none'; 
-					noticeToggle.textContent = '实用订阅技巧∨';
+				
+				<script src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
+				<script>
+				function copyToClipboard(text, qrcode) {
+					navigator.clipboard.writeText(text).then(() => {
+						alert('已复制到剪贴板');
+					}).catch(err => {
+						console.error('复制失败:', err);
+					});
+					const qrcodeDiv = document.getElementById(qrcode);
+					qrcodeDiv.innerHTML = '';
+					new QRCode(qrcodeDiv, {
+						text: text,
+						width: 180,
+						height: 180,
+						colorDark: "#ffffff",
+						colorLight: "transparent",
+						correctLevel: QRCode.CorrectLevel.Q
+					});
 				}
-			}
-			</script>
-			---------------------------------------------------------------<br>
-			################################################################<br>
-			${FileName} 配置信息<br>
-			---------------------------------------------------------------<br>
-			${动态UUID信息}HOST: ${hostName}<br>
-			UUID: ${userID}<br>
-			FKID: ${fakeUserID}<br>
-			UA: ${UA}<br>
-			SCV（跳过TLS证书验证）: ${SCV}<br>
-			${订阅器}<br>
-			---------------------------------------------------------------<br>
-			################################################################<br>
-			v2ray<br>
-			---------------------------------------------------------------<br>
-			<a href="javascript:void(0)" onclick="copyToClipboard('${v2ray}','qrcode_v2ray')" style="color:blue;text-decoration:underline;cursor:pointer;">${v2ray}</a><br>
-			<div id="qrcode_v2ray" style="margin: 10px 10px 10px 10px;"></div>
-			---------------------------------------------------------------<br>
-			################################################################<br>
-			clash-meta<br>
-			---------------------------------------------------------------<br>
-			${clash}<br>
-			---------------------------------------------------------------<br>
-			################################################################<br>
-			${cmad}
-			`;
-		return `<div style="font-size:13px;">${节点配置页}</div>`;
+
+				function toggleNotice() {
+					const noticeContent = document.getElementById('noticeContent');
+					const noticeToggle = document.getElementById('noticeToggle');
+					if (noticeContent.style.display === 'none') {
+						noticeContent.style.display = 'block';
+						noticeToggle.textContent = '实用订阅技巧 ∧';
+					} else {
+						noticeContent.style.display = 'none'; 
+						noticeToggle.textContent = '实用订阅技巧 ∨';
+					}
+				}
+				</script>
+			</body>
+			</html>
+		`;
+		return 节点配置页;
 	} else {
 		if (typeof fetch != 'function') {
 			return 'Error: fetch is not available in this environment.';
@@ -2128,88 +2279,180 @@ async function KV(request, env, txt = 'ADD.txt') {
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1">
 				<style>
-					body {
+					/* 新增美化样式 */
+					* {
 						margin: 0;
-						padding: 15px; /* 调整padding */
+						padding: 0;
 						box-sizing: border-box;
-						font-size: 13px; /* 设置全局字体大小 */
+						font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
 					}
+					
+					body {
+						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+						color: #fff;
+						min-height: 100vh;
+						padding: 20px;
+						line-height: 1.6;
+					}
+					
+					.container {
+						max-width: 1000px;
+						margin: 0 auto;
+					}
+					
+					.header {
+						text-align: center;
+						padding: 20px 0;
+						margin-bottom: 20px;
+					}
+					
+					.header h1 {
+						font-size: 2.2rem;
+						margin-bottom: 10px;
+						text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+					}
+					
+					.card {
+						background: rgba(255, 255, 255, 0.1);
+						backdrop-filter: blur(10px);
+						border-radius: 15px;
+						padding: 25px;
+						margin-bottom: 25px;
+						box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+						border: 1px solid rgba(255, 255, 255, 0.18);
+					}
+					
+					.section-title {
+						font-size: 1.6rem;
+						margin-bottom: 20px;
+						color: #fff;
+						border-bottom: 2px solid rgba(255,255,255,0.3);
+						padding-bottom: 10px;
+					}
+					
 					.editor-container {
 						width: 100%;
 						max-width: 100%;
 						margin: 0 auto;
 					}
+					
 					.editor {
 						width: 100%;
-						height: 520px; /* 调整高度 */
-						margin: 15px 0; /* 调整margin */
-						padding: 10px; /* 调整padding */
+						height: 400px;
+						padding: 15px;
 						box-sizing: border-box;
-						border: 1px solid #ccc;
-						border-radius: 4px;
-						font-size: 13px;
+						border-radius: 10px;
+						background: rgba(0, 0, 0, 0.2);
+						color: #fff;
+						border: 1px solid rgba(255, 255, 255, 0.2);
+						font-size: 14px;
 						line-height: 1.5;
-						overflow-y: auto;
-						resize: none;
+						resize: vertical;
 					}
+					
 					.save-container {
-						margin-top: 8px; /* 调整margin */
 						display: flex;
 						align-items: center;
-						gap: 10px; /* 调整gap */
+						gap: 15px;
+						margin-top: 15px;
 					}
-					.save-btn, .back-btn {
-						padding: 6px 15px; /* 调整padding */
+					
+					.btn {
+						display: inline-block;
+						padding: 10px 20px;
+						background: rgba(255, 255, 255, 0.15);
+						border: 1px solid rgba(255, 255, 255, 0.3);
+						border-radius: 50px;
 						color: white;
-						border: none;
-						border-radius: 4px;
+						text-decoration: none;
+						font-weight: 500;
 						cursor: pointer;
+						transition: all 0.3s ease;
+						backdrop-filter: blur(5px);
 					}
+					
+					.btn:hover {
+						background: rgba(255, 255, 255, 0.25);
+						transform: translateY(-2px);
+						box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+					}
+					
 					.save-btn {
-						background: #4CAF50;
+						background: rgba(76, 175, 80, 0.3);
 					}
+					
 					.save-btn:hover {
-						background: #45a049;
+						background: rgba(76, 175, 80, 0.5);
 					}
+					
 					.back-btn {
-						background: #666;
+						background: rgba(102, 102, 102, 0.3);
 					}
+					
 					.back-btn:hover {
-						background: #555;
+						background: rgba(102, 102, 102, 0.5);
 					}
+					
 					.save-status {
-						color: #666;
+						color: rgba(255,255,255,0.7);
 					}
+					
 					.notice-content {
-						display: none;
-						margin-top: 10px;
-						font-size: 13px;
-						color: #333;
+						background: rgba(0, 0, 0, 0.2);
+						padding: 15px;
+						border-radius: 10px;
+						margin: 15px 0;
+					}
+					
+					@media (max-width: 768px) {
+						.container {
+							padding: 10px;
+						}
+						.card {
+							padding: 15px;
+						}
+						.section-title {
+							font-size: 1.4rem;
+						}
+						.btn {
+							padding: 8px 15px;
+							font-size: 0.9rem;
+						}
 					}
 				</style>
 			</head>
 			<body>
-				################################################################<br>
-				${FileName} 优选订阅列表:<br>
-				---------------------------------------------------------------<br>
-				&nbsp;&nbsp;<strong><a href="javascript:void(0);" id="noticeToggle" onclick="toggleNotice()">注意事项∨</a></strong><br>
-				<div id="noticeContent" class="notice-content">
-					${decodeURIComponent(atob('JTA5JTA5JTA5JTA5JTA5JTNDc3Ryb25nJTNFMS4lM0MlMkZzdHJvbmclM0UlMjBBRERBUEklMjAlRTUlQTYlODIlRTYlOUUlOUMlRTYlOTglQUYlRTUlOEYlOEQlRTQlQkIlQTNJUCVFRiVCQyU4QyVFNSU4RiVBRiVFNCVCRCU5QyVFNCVCOCVCQVBST1hZSVAlRTclOUElODQlRTglQUYlOUQlRUYlQkMlOEMlRTUlOEYlQUYlRTUlQjAlODYlMjIlM0Zwcm94eWlwJTNEdHJ1ZSUyMiVFNSU4RiU4MiVFNiU5NSVCMCVFNiVCNyVCQiVFNSU4QSVBMCVFNSU4OCVCMCVFOSU5MyVCRSVFNiU4RSVBNSVFNiU5QyVBQiVFNSVCMCVCRSVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGYWRkcmVzc2VzYXBpLnR4dCUzQ3N0cm9uZyUzRSUzRnByb3h5aXAlM0R0cnVlJTNDJTJGc3Ryb25nJTNFJTNDYnIlM0UlM0NiciUzRQolMDklMDklMDklMDklMDklM0NzdHJvbmclM0UyLiUzQyUyRnN0cm9uZyUzRSUyMEFEREFQSSUyMCVFNSVBNiU4MiVFNiU5RSU5QyVFNiU5OCVBRiUyMCUzQ2ElMjBocmVmJTNEJTI3aHR0cHMlM0ElMkYlMkZnaXRodWIuY29tJTJGWElVMiUyRkNsb3VkZmxhcmVTcGVlZFRlc3QlMjclM0VDbG91ZGZsYXJlU3BlZWRUZXN0JTNDJTJGYSUzRSUyMCVFNyU5QSU4NCUyMGNzdiUyMCVFNyVCQiU5MyVFNiU5RSU5QyVFNiU5NiU4NyVFNCVCQiVCNiVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGQ2xvdWRmbGFyZVNwZWVkVGVzdC5jc3YlM0NiciUzRSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCLSUyMCVFNSVBNiU4MiVFOSU5QyU4MCVFNiU4QyU4NyVFNSVBRSU5QTIwNTMlRTclQUIlQUYlRTUlOEYlQTMlRTUlOEYlQUYlRTUlQjAlODYlMjIlM0Zwb3J0JTNEMjA1MyUyMiVFNSU4RiU4MiVFNiU5NSVCMCVFNiVCNyVCQiVFNSU4QSVBMCVFNSU4OCVCMCVFOSU5MyVCRSVFNiU4RSVBNSVFNiU5QyVBQiVFNSVCMCVCRSVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGQ2xvdWRmbGFyZVNwZWVkVGVzdC5jc3YlM0NzdHJvbmclM0UlM0Zwb3J0JTNEMjA1MyUzQyUyRnN0cm9uZyUzRSUzQ2JyJTNFJTNDYnIlM0UKJTA5JTA5JTA5JTA5JTA5JTI2bmJzcCUzQiUyNm5ic3AlM0ItJTIwJUU1JUE2JTgyJUU5JTlDJTgwJUU2JThDJTg3JUU1JUFFJTlBJUU4JThBJTgyJUU3JTgyJUI5JUU1JUE0JTg3JUU2JUIzJUE4JUU1JThGJUFGJUU1JUIwJTg2JTIyJTNGaWQlM0RDRiVFNCVCQyU5OCVFOSU4MCU4OSUyMiVFNSU4RiU4MiVFNiU5NSVCMCVFNiVCNyVCQiVFNSU4QSVBMCVFNSU4OCVCMCVFOSU5MyVCRSVFNiU4RSVBNSVFNiU5QyVBQiVFNSVCMCVCRSVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGQ2xvdWRmbGFyZVNwZWVkVGVzdC5jc3YlM0NzdHJvbmclM0UlM0ZpZCUzRENGJUU0JUJDJTk4JUU5JTgwJTg5JTNDJTJGc3Ryb25nJTNFJTNDYnIlM0UlM0NiciUzRQolMDklMDklMDklMDklMDklMjZuYnNwJTNCJTI2bmJzcCUzQi0lMjAlRTUlQTYlODIlRTklOUMlODAlRTYlOEMlODclRTUlQUUlOUElRTUlQTQlOUElRTQlQjglQUElRTUlOEYlODIlRTYlOTUlQjAlRTUlODglOTklRTklOUMlODAlRTglQTYlODElRTQlQkQlQkYlRTclOTQlQTglMjclMjYlMjclRTUlODElOUElRTklOTclQjQlRTklOUElOTQlRUYlQkMlOEMlRTQlQkUlOEIlRTUlQTYlODIlRUYlQkMlOUElM0NiciUzRQolMDklMDklMDklMDklMDklMjZuYnNwJTNCJTI2bmJzcCUzQmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmNtbGl1JTJGV29ya2VyVmxlc3Myc3ViJTJGbWFpbiUyRkNsb3VkZmxhcmVTcGVlZFRlc3QuY3N2JTNGaWQlM0RDRiVFNCVCQyU5OCVFOSU4MCU4OSUzQ3N0cm9uZyUzRSUyNiUzQyUyRnN0cm9uZyUzRXBvcnQlM0QyMDUzJTNDYnIlM0U='))}
-				</div>
-				<div class="editor-container">
-					${hasKV ? `
-					<textarea class="editor" 
-						placeholder="${decodeURIComponent(atob('QUREJUU3JUE0JUJBJUU0JUJFJThCJUVGJUJDJTlBCnZpc2EuY24lMjMlRTQlQkMlOTglRTklODAlODklRTUlOUYlOUYlRTUlOTAlOEQKMTI3LjAuMC4xJTNBMTIzNCUyM0NGbmF0CiU1QjI2MDYlM0E0NzAwJTNBJTNBJTVEJTNBMjA1MyUyM0lQdjYKCiVFNiVCMyVBOCVFNiU4NCU4RiVFRiVCQyU5QQolRTYlQUYlOEYlRTglQTElOEMlRTQlQjglODAlRTQlQjglQUElRTUlOUMlQjAlRTUlOUQlODAlRUYlQkMlOEMlRTYlQTAlQkMlRTUlQkMlOEYlRTQlQjglQkElMjAlRTUlOUMlQjAlRTUlOUQlODAlM0ElRTclQUIlQUYlRTUlOEYlQTMlMjMlRTUlQTQlODclRTYlQjMlQTgKSVB2NiVFNSU5QyVCMCVFNSU5RCU4MCVFOSU5QyU4MCVFOCVBNiU4MSVFNyU5NCVBOCVFNCVCOCVBRCVFNiU4QiVBQyVFNSU4RiVCNyVFNiU4QiVBQyVFOCVCNSVCNyVFNiU5RCVBNSVFRiVCQyU4QyVFNSVBNiU4MiVFRiVCQyU5QSU1QjI2MDYlM0E0NzAwJTNBJTNBJTVEJTNBMjA1MwolRTclQUIlQUYlRTUlOEYlQTMlRTQlQjglOEQlRTUlODYlOTklRUYlQkMlOEMlRTklQkIlOTglRTglQUUlQTQlRTQlQjglQkElMjA0NDMlMjAlRTclQUIlQUYlRTUlOEYlQTMlRUYlQkMlOEMlRTUlQTYlODIlRUYlQkMlOUF2aXNhLmNuJTIzJUU0JUJDJTk4JUU5JTgwJTg5JUU1JTlGJTlGJUU1JTkwJThECgoKQUREQVBJJUU3JUE0JUJBJUU0JUJFJThCJUVGJUJDJTlBCmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmNtbGl1JTJGV29ya2VyVmxlc3Myc3ViJTJGcmVmcyUyRmhlYWRzJTJGbWFpbiUyRmFkZHJlc3Nlc2FwaS50eHQKCiVFNiVCMyVBOCVFNiU4NCU4RiVFRiVCQyU5QUFEREFQSSVFNyU5QiVCNCVFNiU4RSVBNSVFNiVCNyVCQiVFNSU4QSVBMCVFNyU5QiVCNCVFOSU5MyVCRSVFNSU4RCVCMyVFNSU4RiVBRg=='))}"
-						id="content">${content}</textarea>
-					<div class="save-container">
-						<button class="back-btn" onclick="goBack()">返回配置页</button>
-						<button class="save-btn" onclick="saveContent(this)">保存</button>
-						<span class="save-status" id="saveStatus"></span>
+				<div class="container">
+					<div class="header">
+						<h1>${FileName} 优选订阅列表</h1>
 					</div>
-					<br>
-					################################################################<br>
-					${cmad}
-					` : '<p>未绑定KV空间</p>'}
+					
+					<div class="card">
+						<h2 class="section-title">编辑列表</h2>
+						<div class="editor-container">
+							${hasKV ? `
+							<textarea class="editor" 
+								placeholder="${decodeURIComponent(atob('QUREJUU3JUE0JUJBJUU0JUJFJThCJUVGJUJDJTlBCnZpc2EuY24lMjMlRTQlQkMlOTglRTklODAlODklRTUlOUYlOUYlRTUlOTAlOEQKMTI3LjAuMC4xJTNBMTIzNCUyM0NGbmF0CiU1QjI2MDYlM0E0NzAwJTNBJTNBJTVEJTNBMjA1MyUyM0lQdjYKCiVFNiVCMyVBOCVFNiU4NCU4RiVFRiVCQyU5QQolRTYlQUYlOEYlRTglQTElOEMlRTQlQjglODAlRTQlQjglQUElRTUlOUMlQjAlRTUlOUQlODAlRUYlQkMlOEMlRTYlQTAlQkMlRTUlQkMlOEYlRTQlQjglQkElMjAlRTUlOUMlQjAlRTUlOUQlODAlM0ElRTclQUIlQUYlRTUlOEYlQTMlMjMlRTUlQTQlODclRTYlQjMlQTgKSVB2NiVFNSU5QyVCMCVFNSU5RCU4MCVFOSU5QyU4MCVFOCVBNiU4MSVFNyU5NCVBOCVFNCVCOCVBRCVFNiU4QiVBQyVFNSU4RiVCNyVFNiU4QiVBQyVFOCVCNSVCNyVFNiU5RCVBNSVFRiVCQyU4QyVFNSVBNiU4MiVFRiVCQyU5QSU1QjI2MDYlM0E0NzAwJTNBJTNBJTVEJTNBMjA1MwolRTclQUIlQUYlRTUlOEYlQTMlRTQlQjglOEQlRTUlODYlOTklRUYlQkMlOEMlRTklQkIlOTglRTglQUUlQTQlRTQlQjglQkElMjA0NDMlMjAlRTclQUIlQUYlRTUlOEYlQTMlRUYlQkMlOEMlRTUlQTYlODIlRUYlQkMlOUF2aXNhLmNuJTIzJUU0JUJDJTk4JUU5JTgwJTg5JUU1JTlGJTlGJUU1JTkwJThECgoKQUREQVBJJUU3JUE0JUJBJUU0JUJFJThCJUVGJUJDJTlBCmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmNtbGl1JTJGV29ya2VyVmxlc3Myc3ViJTJGcmVmcyUyRmhlYWRzJTJGbWFpbiUyRmFkZHJlc3Nlc2FwaS50eHQKCiVFNiVCMyVBOCVFNiU4NCU4RiVFRiVCQyU5QUFEREFQSSVFNyU5QiVCNCVFNiU4RSVBNSVFNiVCNyVCQiVFNSU4QSVBMCVFNyU5QiVCNCVFOSU5MyVCRSVFNSU4RCVCMyVFNSU4RiVBRg=='))}"
+								id="content">${content}</textarea>
+							<div class="save-container">
+								<button class="btn back-btn" onclick="goBack()">返回配置页</button>
+								<button class="btn save-btn" onclick="saveContent(this)">保存</button>
+								<span class="save-status" id="saveStatus"></span>
+							</div>
+							` : '<p>未绑定KV空间</p>'}
+						</div>
+					</div>
+					
+					<div class="card">
+						<h2 class="section-title">注意事项</h2>
+						<div class="notice-content">
+							${decodeURIComponent(atob('JTA5JTA5JTA5JTA5JTA5JTNDc3Ryb25nJTNFMS4lM0MlMkZzdHJvbmclM0UlMjBBRERBUEklMjAlRTUlQTYlODIlRTYlOUUlOUMlRTYlOTglQUYlRTUlOEYlOEQlRTQlQkIlQTNJUCVFRiVCQyU4QyVFNSU4RiVBRiVFNCVCRCU5QyVFNCVCOCVCQVBST1hZSVAlRTclOUElODQlRTglQUYlOUQlRUYlQkMlOEMlRTUlOEYlQUYlRTUlQjAlODYlMjIlM0Zwcm94eWlwJTNEdHJ1ZSUyMiVFNSU4RiU4MiVFNiU5NSVCMCVFNiVCNyVCQiVFNSU4QSVBMCVFNSU4OCVCMCVFOSU5MyVCRSVFNiU4RSVBNSVFNiU5QyVBQiVFNSVCMCVCRSVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGYWRkcmVzc2VzYXBpLnR4dCUzQ3N0cm9uZyUzRSUzRnByb3h5aXAlM0R0cnVlJTNDJTJGc3Ryb25nJTNFJTNDYnIlM0UlM0NiciUzRQolMDklMDklMDklMDklMDklM0NzdHJvbmclM0UyLiUzQyUyRnN0cm9uZyUzRSUyMEFEREFQSSUyMCVFNSVBNiU4MiVFNiU5RSU5QyVFNiU5OCVBRiUyMCUzQ2ElMjBocmVmJTNEJTI3aHR0cHMlM0ElMkYlMkZnaXRodWIuY29tJTJGWElVMiUyRkNsb3VkZmxhcmVTcGVlZFRlc3QlMjclM0VDbG91ZGZsYXJlU3BlZWRUZXN0JTNDJTJGYSUzRSUyMCVFNyU5QSU4NCUyMGNzdiUyMCVFNyVCQiU5MyVFNiU5RSU5QyVFNiU5NiU4NyVFNCVCQiVCNiVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGQ2xvdWRmbGFyZVNwZWVkVGVzdC5jc3YlM0NiciUzRSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCLSUyMCVFNSVBNiU4MiVFOSU5QyU4MCVFNiU4QyU4NyVFNSVBRSU5QTIwNTMlRTclQUIlQUYlRTUlOEYlQTMlRTUlOEYlQUYlRTUlQjAlODYlMjIlM0Zwb3J0JTNEMjA1MyUyMiVFNSU4RiU4MiVFNiU5NSVCMCVFNiVCNyVCQiVFNSU4QSVBMCVFNSU4OCVCMCVFOSU5MyVCRSVFNiU4RSVBNSVFNiU5QyVBQiVFNSVCMCVCRSVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGQ2xvdWRmbGFyZVNwZWVkVGVzdC5jc3YlM0NzdHJvbmclM0UlM0Zwb3J0JTNEMjA1MyUzQyUyRnN0cm9uZyUzRSUzQ2JyJTNFJTNDYnIlM0UKJTA5JTA5JTA5JTA5JTA5JTI2bmJzcCUzQiUyNm5ic3AlM0ItJTIwJUU1JUE2JTgyJUU5JTlDJTgwJUU2JThDJTg3JUU1JUFFJTlBJUU4JThBJTgyJUU3JTgyJUI5JUU1JUE0JTg3JUU2JUIzJUE4JUU1JThGJUFGJUU1JUIwJTg2JTIyJTNGaWQlM0RDRiVFNCVCQyU5OCVFOSU4MCU4OSUyMiVFNSU4RiU4MiVFNiU5NSVCMCVFNiVCNyVCQiVFNSU4QSVBMCVFNSU4OCVCMCVFOSU5MyVCRSVFNiU4RSVBNSVFNiU5QyVBQiVFNSVCMCVCRSVFRiVCQyU4QyVFNCVCRSU4QiVFNSVBNiU4MiVFRiVCQyU5QSUzQ2JyJTNFCiUwOSUwOSUwOSUwOSUwOSUyNm5ic3AlM0IlMjZuYnNwJTNCaHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGY21saXUlMkZXb3JrZXJWbGVzczJzdWIlMkZtYWluJTJGQ2xvdWRmbGFyZVNwZWVkVGVzdC5jc3YlM0NzdHJvbmclM0UlM0ZpZCUzRENGJUU0JUJDJTk4JUU5JTgwJTg5JTNDJTJGc3Ryb25nJTNFJTNDYnIlM0UlM0NiciUzRQolMDklMDklMDklMDklMDklMjZuYnNwJTNCJTI2bmJzcCUzQi0lMjAlRTUlQTYlODIlRTklOUMlODAlRTYlOEMlODclRTUlQUUlOUElRTUlQTQlOUElRTQlQjglQUElRTUlOEYlODIlRTYlOTUlQjAlRTUlODglOTklRTklOUMlODAlRTglQTYlODElRTQlQkQlQkYlRTclOTQlQTglMjclMjYlMjclRTUlODElOUElRTklOTclQjQlRTklOUElOTQlRUYlQkMlOEMlRTQlQkUlOEIlRTUlQTYlODIlRUYlQkMlOUElM0NiciUzRQolMDklMDklMDklMDklMDklMjZuYnNwJTNCJTI2bmJzcCUzQmh0dHBzJTNBJTJGJTJGcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSUyRmNtbGl1JTJGV29ya2VyVmxlc3Myc3ViJTJGbWFpbiUyRkNsb3VkZmxhcmVTcGVlZFRlc3QuY3N2JTNGaWQlM0RDRiVFNCVCQyU5OCVFOSU4MCU4OSUzQ3N0cm9uZyUzRSUyNiUzQyUyRnN0cm9uZyUzRXBvcnQlM0QyMDUzJTNDYnIlM0U='))}
+						</div>
+					</div>
+					
+					<div class="footer">
+						${cmad}
+					</div>
 				</div>
 		
 				<script>
@@ -2263,7 +2506,7 @@ async function KV(request, env, txt = 'ADD.txt') {
 								const statusElem = document.getElementById('saveStatus');
 								if (statusElem) {
 									statusElem.textContent = message;
-									statusElem.style.color = isError ? 'red' : '#666';
+									statusElem.style.color = isError ? '#ff6b6b' : '#a0d9ff';
 								}
 							};
 							updateButtonText('准备按钮重置函数');
@@ -2311,7 +2554,7 @@ async function KV(request, env, txt = 'ADD.txt') {
 							const statusElem = document.getElementById('saveStatus');
 							if (statusElem) {
 								statusElem.textContent = \`错误: \${error.message}\`;
-								statusElem.style.color = 'red';
+								statusElem.style.color = '#ff6b6b';
 							}
 						}
 					}
@@ -2322,23 +2565,6 @@ async function KV(request, env, txt = 'ADD.txt') {
 						timer = setTimeout(saveContent, 5000);
 					});
 				}
-		
-				function toggleNotice() {
-					const noticeContent = document.getElementById('noticeContent');
-					const noticeToggle = document.getElementById('noticeToggle');
-					if (noticeContent.style.display === 'none' || noticeContent.style.display === '') {
-						noticeContent.style.display = 'block';
-						noticeToggle.textContent = '注意事项∧';
-					} else {
-						noticeContent.style.display = 'none';
-						noticeToggle.textContent = '注意事项∨';
-					}
-				}
-		
-				// 初始化 noticeContent 的 display 属性
-				document.addEventListener('DOMContentLoaded', () => {
-					document.getElementById('noticeContent').style.display = 'none';
-				});
 				</script>
 			</body>
 			</html>
